@@ -6,11 +6,13 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import com.example.demo.client.service.impl.MySecretAiStrategy;
 
 
 @SpringBootApplication
+@EnableFeignClients
 public class DemoClientApplication
 {
   @Autowired
