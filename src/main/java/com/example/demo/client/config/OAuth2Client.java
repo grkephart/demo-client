@@ -17,21 +17,21 @@ public class OAuth2Client
 {
   @Value("${http://localhost:8080/demo/oauth/token}")
   private static String tokenUrl;
-  @Value("${client-id}")
+  @Value("${spring.security.oauth2.client.registration.integrator.client-id}")
   private static String clientId;
-  @Value("${client-secret}")
+  @Value("${spring.security.oauth2.client.registration.integrator.client-secret}")
   private static String clientSecret;
 
   @SuppressWarnings({ "unchecked", "rawtypes" })
   public static String getAccessToken()
   {
     RestTemplate restTemplate = new RestTemplate();
-
     HttpHeaders headers = new HttpHeaders();
+    Map<String, String> params = new HashMap<>();
+  
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     headers.setBasicAuth(clientId, clientSecret);
 
-    Map<String, String> params = new HashMap<>();
     params.put("grant_type", "client_credentials");
 
     HttpEntity<Map<String, String>> entity = new HttpEntity<>(params, headers);
