@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
  * 
  * @see org.springframework.security.config.oauth2.client.CommonOAuth2Provider
  */
-public enum UncommonOAuth2Provider {
+public enum UncommonOAuth2Provider implements OAuth2Provider {
 
   COINBASE {
 
@@ -30,7 +30,7 @@ public enum UncommonOAuth2Provider {
             .userInfoUri(CB_USER_INFO_URI)//
             .userNameAttributeName(CB_USER_NAME_ATTRIBUTE_NAME)//
             .clientName(CB_CLIENT_NAME);
-
+      
       return builder;
     }
 

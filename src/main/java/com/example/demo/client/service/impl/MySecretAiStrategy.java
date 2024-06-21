@@ -19,10 +19,13 @@ public class MySecretAiStrategy implements InvestmentStrategy
   @Autowired
   private IntegratorClient client;
   
+  @Autowired
+  private OAuth2Client oAuth2Client;
+  
   
   public void execute()
   {
-    String authorization = OAuth2Client.getAccessToken();
+    String authorization = oAuth2Client.getAccessToken();
     
     ProductResponse products = this.client.getProducts(authorization, null, null, null, null, null, null, null);
     

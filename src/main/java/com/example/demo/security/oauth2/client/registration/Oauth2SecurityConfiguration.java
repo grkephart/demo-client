@@ -30,11 +30,11 @@ import com.example.demo.security.config.oauth2.client.UncommonOAuth2Provider;
  */
 public abstract class Oauth2SecurityConfiguration
 {
-  private static final String   CLIENT_ID           = ".client-id";
-  private static final String   CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
-  private static final String   CLIENT_SCOPE        = ".scope";
-  private static final String   CLIENT_SECRET       = ".client-secret";
-  private static final String   CLIENTS_KEY         = "security.oauth2.client.registration.clients";
+  protected static final String CLIENT_ID           = ".client-id";
+  protected static final String CLIENT_PROPERTY_KEY = "spring.security.oauth2.client.registration.";
+  protected static final String CLIENT_SCOPE        = ".scope";
+  protected static final String CLIENT_SECRET       = ".client-secret";
+  protected static final String CLIENTS_KEY         = "security.oauth2.client.registration.clients";
   protected static final String COINBASE_CLIENT     = "coinbase";
   protected static final String FACEBOOK_CLIENT     = "facebook";
   protected static final Object GITHUB_CLIENT       = "github";
@@ -171,7 +171,21 @@ public abstract class Oauth2SecurityConfiguration
           .build();
     }
     else
-      return null;
+      return getCustomClientRegistration(client, clientId, clientSecret, clientScopes);
+  }
+
+
+  /**
+   * @param client
+   * @return
+   */
+  protected ClientRegistration getCustomClientRegistration(
+    String client,
+    String clientId,
+    String clientSecret,
+    String[] clientScopes)
+  {
+    return null;
   }
 
 

@@ -1,7 +1,7 @@
 package com.example.demo.client.config;
 
 
-import java.util.HashMap;
+import java.util.Base64;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,36 +10,70 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 
+@Component
 public class OAuth2Client
 {
-  @Value("${http://localhost:8080/demo/oauth/token}")
-  private static String tokenUrl;
   @Value("${spring.security.oauth2.client.registration.integrator.client-id}")
-  private static String clientId;
-  @Value("${spring.security.oauth2.client.registration.integrator.client-secret}")
-  private static String clientSecret;
+  private String             clientId;
 
-  @SuppressWarnings({ "unchecked", "rawtypes" })
-  public static String getAccessToken()
+  @Value("${spring.security.oauth2.client.registration.integrator.client-secret}")
+  private String             clientSecret;
+
+  @Value("${spring.security.oauth2.client.registration.integrator.token-uri}")
+  private String             tokenUrl;
+
+  private final RestTemplate restTemplate;
+
+  public OAuth2Client()
   {
-    RestTemplate restTemplate = new RestTemplate();
+    this.restTemplate = new RestTemplate();
+    
+    this.restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
+    this.restTemplate.getMessageConverters().add(new FormHttpMessageConverter());
+  }
+
+
+  public String getAccessToken()
+  {
+    String authHeader = "Basic " + Base64.getEncoder()
+        .encodeToString((this.clientId + ":" + this.clientSecret).getBytes());
     HttpHeaders headers = new HttpHeaders();
-    Map<String, String> params = new HashMap<>();
+    MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
   
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-    headers.setBasicAuth(clientId, clientSecret);
+    headers.set("Authorization", authHeader);
 
-    params.put("grant_type", "client_credentials");
+    map.add("grant_type", "client_credentials");
 
-    HttpEntity<Map<String, String>> entity = new HttpEntity<>(params, headers);
+    HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
 
-    ResponseEntity<Map> response = restTemplate.exchange(tokenUrl, HttpMethod.POST, entity,
-      Map.class);
-    Map<String, String> responseBody = response.getBody();
-
-    return responseBody.get("access_token");
+    try
+    {
+      ResponseEntity<Map> response = this.restTemplate.exchange(this.tokenUrl, HttpMethod.POST,
+        entity, Map.class);
+      Map<String, Object> responseBody = response.getBody();
+      
+      if (responseBody != null && responseBody.containsKey("access_token"))
+      {
+        return "Bearer " + responseBody.get("access_token").toString();
+      }
+      else
+      {
+        throw new RuntimeException("Failed to retrieve access token");
+      }
+    }
+    catch (RestClientException e)
+    {
+      throw new RuntimeException("Error while retrieving access token", e);
+    }
   }
 }
