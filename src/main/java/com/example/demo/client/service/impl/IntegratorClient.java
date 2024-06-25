@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.cb.api.clients.CoinbaseFeignClient;
 import com.example.demo.client.dto.UserTokenPojo;
@@ -21,12 +20,11 @@ import com.example.demo.client.dto.UserTokenPojo;
 public interface IntegratorClient extends CoinbaseFeignClient
 {
   /**
+   * @param accessToken 
    * @param bearerToken
    * @return
    */
   @GetMapping("tokens")
-  List<UserTokenPojo> getUserTokens(
-    @RequestHeader("Authorization")
-    String bearerToken);
+  List<UserTokenPojo> getUserTokens(String accessToken);
 
 }
