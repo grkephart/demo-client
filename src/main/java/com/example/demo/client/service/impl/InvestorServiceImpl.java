@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.web.client.RestClientResponseException;
 
-import com.example.demo.client.dto.UserTokenPojo;
+import com.example.demo.client.dto.DemoUserPojo;
 
 
 /**
@@ -29,7 +29,7 @@ public class InvestorServiceImpl
    * @throws ClientRegistrationException
    * @throws RestClientResponseException
    */
-  public List<UserTokenPojo> retrieveUserTokens()
+  public List<DemoUserPojo> retrieveUserTokens()
   {
     SecurityContext context = SecurityContextHolder.getContext();
 
@@ -43,9 +43,7 @@ public class InvestorServiceImpl
         throw new AccessControlException("Unauthorized Investor access");
       }
 
-      String accessToken = authorizedClient.getAccessToken().getTokenValue(); // Optional
-
-       List<UserTokenPojo> response = integratorClient.getUserTokens(accessToken);
+      List<DemoUserPojo> response = integratorClient.getUsers();
 
       return response;
     }
