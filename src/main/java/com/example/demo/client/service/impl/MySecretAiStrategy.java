@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cb.api.dto.ProductResponse;
-import com.example.demo.client.config.OAuth2Client;
+import com.cb.api.service.CoinbaseAuthService;
 
 /**
  * @author gary_kephart
@@ -20,12 +20,12 @@ public class MySecretAiStrategy implements InvestmentStrategy
   private IntegratorClient client;
   
   @Autowired
-  private OAuth2Client oAuth2Client;
+  private CoinbaseAuthService coinbaseAuthService;
   
   
   public void execute()
   {
-    String authorization = oAuth2Client.getAccessToken();
+    String authorization = coinbaseAuthService.getAuthorization();
     
     ProductResponse products = this.client.getProducts(authorization, null, null, null, null, null, null, null);
     

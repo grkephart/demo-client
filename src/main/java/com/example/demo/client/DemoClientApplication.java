@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 import com.example.demo.client.service.impl.MySecretAiStrategy;
 
 
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = { "com.cb.api", "com.example.demo.client" })
+@ComponentScan(basePackages = { "com.cb.api", "com.example.demo.client" })
 public class DemoClientApplication
 {
   @Autowired

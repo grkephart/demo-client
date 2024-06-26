@@ -8,11 +8,9 @@ import java.security.AccessControlException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.web.client.RestClientResponseException;
 
+import com.cb.api.service.CoinbaseAuthService;
 import com.example.demo.client.dto.DemoUserPojo;
 
 
@@ -21,7 +19,9 @@ import com.example.demo.client.dto.DemoUserPojo;
  */
 public class InvestorServiceImpl
 {
-  private static final String INVESTOR_CLIENT = "investor";
+
+  @Autowired
+  private CoinbaseAuthService coinbaseAuthService;
   @Autowired
   private IntegratorClient    integratorClient;
   /**
@@ -31,18 +31,10 @@ public class InvestorServiceImpl
    */
   public List<DemoUserPojo> retrieveUserTokens()
   {
-    SecurityContext context = SecurityContextHolder.getContext();
+    String authorization = coinbaseAuthService.getAuthorization();
 
-    if (context != null)
+    if (authorization != null)
     {
-      OAuth2AuthorizedClient authorizedClient = (OAuth2AuthorizedClient)context.getAuthentication();
-
-      if (authorizedClient == null
-          || !authorizedClient.getClientRegistration().getClientId().equals(INVESTOR_CLIENT))
-      {
-        throw new AccessControlException("Unauthorized Investor access");
-      }
-
       List<DemoUserPojo> response = integratorClient.getUsers();
 
       return response;
