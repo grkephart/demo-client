@@ -41,5 +41,12 @@
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-oauth2-client</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.drdeesw</groupId>
+      <artifactId>dr-dee-commons</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    
   </dependencies>
 </project>

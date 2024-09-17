@@ -52,10 +52,10 @@ public class MySecretAiStrategy implements InvestmentStrategy
 
   public void execute()
   {
-    String authorization = coinbaseAuthService.getAuthorization();
+    String authorization = null;//coinbaseAuthService.getAuthorization();
 
     getProducts(authorization);
-    createOrder(authorization);
+    //createOrder(authorization);
   }
 
 
